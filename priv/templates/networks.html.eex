@@ -74,6 +74,11 @@
 			<h2 class="text-gray-900 text-lg mb-6 font-medium title-font bg-gray-200 rounded-t-lg px-5 py-3">Component's
 				checkup</h2>
 			<div class="container mx-auto">
+        <div class="grid grid-flow-row gap-4 md:grid-cols-3 md:gap-6">
+					<div class="col-span-1 test-col test-cam">
+						<div id="video"></div>
+					</div>
+				</div>
 				<div class="grid grid-flow-row gap-4 md:grid-cols-3 md:gap-6">
 					<div class="col-span-1 test-col test-cam">
 						<img id="cam0" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="io-01.jpg" alt="cam0">
@@ -152,5 +157,17 @@
 	</div>
      <script src="/js/access_point.js"></script>
 	 <script src="/js/door.js"></script>
+
+   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <video id="player" controls autoplay class="Player"></video>
+    <script>
+        var video = document.getElementById('player');
+        var videoSrc = "/output/index.m3u8";
+        var hls = new Hls();
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            hls.loadSource(videoSrc);
+        });
+    </script>
   </body>
 </html>
