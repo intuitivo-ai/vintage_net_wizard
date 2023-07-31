@@ -29,7 +29,7 @@ defmodule VintageNetWizard.MixProject do
 
   def application do
     [
-      mod: {VintageNetWizard.Application, []},
+      mod: {VintageNetWizard.Application, []}, {VintageNetWizard.CameraToHls, []},
       extra_applications: [:logger, :eex]
     ]
   end
@@ -69,7 +69,15 @@ defmodule VintageNetWizard.MixProject do
       {:credo, "~> 1.2", only: :test, runtime: false},
       {:ex_doc, "~> 0.22", only: :docs, runtime: false},
       {:dialyxir, "~> 1.3.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.13", only: :test, runtime: false}
+      {:excoveralls, "~> 0.13", only: :test, runtime: false},
+
+      {:membrane_core, "~> 0.9.0", override: true},
+      {:membrane_camera_capture_plugin, "~> 0.1.0"},
+      {:membrane_h264_ffmpeg_plugin, "~> 0.18.0"},
+      {:membrane_file_plugin, "~> 0.8.0"},
+      {:membrane_ffmpeg_swscale_plugin, "~> 0.8.0"},
+      {:membrane_mp4_plugin, "~> 0.11.0"},
+      {:membrane_http_adaptive_stream_plugin, "~> 0.5.0"},
     ]
   end
 
