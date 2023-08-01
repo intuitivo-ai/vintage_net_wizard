@@ -8,14 +8,17 @@
   const LockState = document.querySelector("#lock-state")
   const LockBtn = document.querySelector("#lock-btn");
   
-  getDoorState();
-  setInterval(getDoorState, 1000);
+  // getDoorState();
+  // setInterval(getDoorState, 1000);
 
-  getLockState();
-  setInterval(getLockState, 1000);
+  // getLockState();
+  // setInterval(getLockState, 1000);
 
-  getCams();
-  setInterval(getCams, 4000);
+  // getCams();
+  // setInterval(getCams, 4000);
+
+  changeVideo("2")
+  setInterval(() => changeVideo("2"), 10000)
 
 
   async function fetchBinaryData(url, data) {
@@ -59,6 +62,19 @@
     cam2.src = 'data:image/jpeg;base64,' + base64Data;
   }
 
+  async function changeVideo(cam_index){
+    const cam = document.querySelector(`#cam${cam_index}`);
+    for(let i=1; 1<=9; i++){
+    cam.setAttribute('src', `/frames/frame000${i}.jpg`)
+    // /root/cam0/frame%04d.jpg
+    await sleep(1000)
+    }
+  }
+
+  function init_cams(){
+  }
+  function stop_cams(){}
+
   function getCams() {
 
     fetch("/api/v1/cams")
@@ -83,13 +99,13 @@
       });
  
   
-    fetchBinaryData("/api/v1/cam3", "")
-      .then((binaryData) => {
-        setcam2(binaryData);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    // fetchBinaryData("/api/v1/cam3", "")
+    //   .then((binaryData) => {
+    //     setcam2(binaryData);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error);
+    //   });
 
   }
 
@@ -124,6 +140,10 @@
   function disableBtn(btn, disabled){
     btn.disabled = disabled; 
    }
+
+   function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+    };
 
 })()
 
