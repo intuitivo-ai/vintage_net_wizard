@@ -40,18 +40,48 @@ defmodule VintageNetWizard.Pipeline do
         }
       ]
   
-      links = [
-        link(:source)
-        |> to(:converter)
-        |> to(:encoder)
-        |> to(:video_nal_parser)
-        |> via_in(:input,
-          options: [encoding: :H264, track_name: "Streaming cam"]
+      structure = [
+        child(:source, %Membrane.CameraCapture{
+          device: "/dev/video2"
+        })
+        |> child(:converter, %Membrane.FFmpeg.SWScale.PixelFormatConverter{format: :I420})
+        |> child(:encoder, Membrane.H264.FFmpeg.Encoder)
+        |> child(
+          :video_nal_parser, %Membrane.H264.FFmpeg.Parser{
+            framerate: {20, 1},
+            alignment: :au,
+            attach_nalus?: true
+          }
         )
-        |> to(:hls_sink)
+        |> child(:hls_sink, 
+          %Membrane.HTTPAdaptiveStream.SinkBin{
+            manifest_module: Membrane.HTTPAdaptiveStream.HLS,
+            storage: %Membrane.HTTPAdaptiveStream.Storages.FileStorage{directory: "output"}
+          }
+        ),
+        get_child(:source)
+        |> get_child(:converter)
+        |> get_child(:encoder)
+        |> get_child(:video_nal_parser)
+        |> child(:input,
+          options: [encoding: :H264, track_name: "My first track"]
+        )
+        |> get_child(:hls_sink)
       ]
   
-      {{:ok, spec: %ParentSpec{children: children, links: links}}, %{}}
+      # links = [
+      #   link(:source)
+      #   |> to(:converter)
+      #   |> to(:encoder)
+      #   |> to(:video_nal_parser)
+      #   |> via_in(:input,
+      #     options: [encoding: :H264, track_name: "My first track"]
+      #   )
+      #   |> to(:hls_sink)
+      # ]
+  
+      spec = {structure, crash_group: {:first_group, :temporary}}
+      {[spec: spec], %{}}
     end
   end
   

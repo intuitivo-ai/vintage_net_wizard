@@ -5,13 +5,12 @@ defmodule VintageNetWizard.CameraToHls do
     """
   
     use Application
-    alias Membrane.Demo.CameraToHls.Pipeline
+    alias VintageNetWizard.Pipeline
   
-    @impl true
     def start(_type, _args) do
-      {:ok, pid} = Pipeline.start_link()
-      Membrane.Pipeline.play(pid)
-  
-      {:ok, pid}
+      {:ok, _pipeline_supervisor, pipeline} = Pipeline.start_link()
+      send(pipeline, :play)
+      
+      {:ok, pipeline}
     end
   end
