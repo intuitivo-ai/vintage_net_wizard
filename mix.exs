@@ -29,7 +29,7 @@ defmodule VintageNetWizard.MixProject do
 
   def application do
     [
-      mod: [{VintageNetWizard.Application, []}],# {VintageNetWizard.CameraToHls, []}],
+      mod: {VintageNetWizard.Application, []},# {VintageNetWizard.CameraToHls, []}],
       extra_applications: [:logger, :eex]
     ]
   end
