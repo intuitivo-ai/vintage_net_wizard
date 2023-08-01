@@ -74,6 +74,18 @@
   function init_cams(){
   }
   function stop_cams(){}
+  
+  window.addEventListener("beforeunload", function (e) {
+    stop_cams()
+    return                             //Webkit, Safari, Chrome
+    });
+
+  window.addEventListener("onunload", function (e) {
+    stop_cams()
+    return                             //Webkit, Safari, Chrome
+    });
+
+
 
   function getCams() {
 
