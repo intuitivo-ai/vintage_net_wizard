@@ -77,45 +77,32 @@ defmodule VintageNetWizard.Web.Api do
     send_json(conn, 200, json)
   end
 
-  get "/cams" do
+  get "/init_cams" do
 
-    BackendServer.set_cam(true)
+    BackendServer.set_init_cam(true)
 
     send_json(conn, 200, "")
   end
 
-  post "/cam1" do
+  get "/stop_cams" do
 
-    #BackendServer.set_cam(0, true)
+    BackendServer.set_stop_cam(true)
 
-    Process.sleep(3_000) # espera 2 segundo
-
-    {:ok, binary} = File.read("/root/cam0.jpg")
-
-    send_imagen(conn, 200, binary)
+    send_json(conn, 200, "")
   end
 
-  post "/cam2" do
+  post "/cam" do
 
-    #BackendServer.set_cam(1, true)
+    result = conn
+    |> get_body()
 
-    Process.sleep(3_000) # espera 2 segundo
+    case File.read("/root/cam#{result["cam_index"]}/frame#{result["format_index"]}.jpg") do
+      {:ok, binary} -> send_imagen(conn, 200, binary)
+      {:error, posix} -> send_imagen(conn, 200, 0)
+    end
 
-    {:ok, binary} = File.read("/root/cam1.jpg")
-
-    send_imagen(conn, 200, binary)
   end
 
-  post "/cam3" do
-
-    #BackendServer.set_cam(2, true)
-
-    Process.sleep(3_000) # espera 2 segundo
-
-    {:ok, binary} = File.read("/root/cam2.jpg")
-
-    send_imagen(conn, 200, binary)
-  end
 
   post "/apply" do
     case BackendServer.apply() do

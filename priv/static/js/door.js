@@ -1,9 +1,9 @@
 'use strict';
 
 (() => {
-  const cam0 = document.querySelector("#cam0");
-  const cam1 = document.querySelector("#cam1");
-  const cam2 = document.querySelector("#cam2");
+  //const cam0 = document.querySelector("#cam0");
+  //const cam1 = document.querySelector("#cam1");
+  //const cam2 = document.querySelector("#cam2");
   const doorState = document.querySelector("#door-state");
   const LockState = document.querySelector("#lock-state")
   const LockBtn = document.querySelector("#lock-btn");
@@ -14,9 +14,13 @@
   getLockState();
   setInterval(getLockState, 1000);
 
-  getCams();
-  setInterval(getCams, 4000);
+  setTimeout(() => initStream(), 1000)
 
+  setTimeout(() => changeVideo("0", 1), 2000)
+
+  setTimeout(() => changeVideo("1", 1), 2000)
+  
+  setTimeout(() => changeVideo("2", 1), 2000)
 
   async function fetchBinaryData(url, data) {
     const response = await fetch(url, {
@@ -44,54 +48,58 @@
     return btoa(binary);
   }
 
-  function setcam0(binaryData) {
+  function setcam(cam, binaryData) {
     const base64Data = arrayBufferToBase64(binaryData);
-    cam0.src = 'data:image/jpeg;base64,' + base64Data;
+    cam.src = 'data:image/jpeg;base64,' + base64Data;
   }
-
-  function setcam1(binaryData) {
-    const base64Data = arrayBufferToBase64(binaryData);
-    cam1.src = 'data:image/jpeg;base64,' + base64Data;
-  }
-
-  function setcam2(binaryData) {
-    const base64Data = arrayBufferToBase64(binaryData);
-    cam2.src = 'data:image/jpeg;base64,' + base64Data;
-  }
-
-  function getCams() {
-
-    fetch("/api/v1/cams")
+  
+  function initStream() {
+    fetch("/api/v1/init_cams")
       .then((resp) => resp.json())
       .then((state) => {
       });
+  }
 
-    fetchBinaryData("/api/v1/cam1", "")
+  function stopStream() {
+    fetch("/api/v1/stop_cams")
+      .then((resp) => resp.json())
+      .then((state) => {
+      });
+  }
+
+  window.addEventListener("beforeunload", function (e) {
+    stopStream()
+    return                             //Webkit, Safari, Chrome
+    });
+
+  window.addEventListener("onunload", function (e) {
+    stopStream()
+    return                             //Webkit, Safari, Chrome
+    });
+
+  async function changeVideo(cam_index, index){
+    const cam = document.querySelector(`#cam${cam_index}`);
+    
+    const format_index = index.toString().padStart(4, '0');
+
+    //cam.setAttribute('src', `/root/cam${cam_index}/frame${format_index}.jpg`)
+    
+    fetchBinaryData("/api/v1/cam", {cam_index: cam_index, format_index: format_index})
   .then((binaryData) => {
-    setcam0(binaryData);
+    setcam(cam, binaryData);
   })
   .catch((error) => {
     console.error('Error:', error);
   });
+   
+    await sleep(1000)
 
-    fetchBinaryData("/api/v1/cam2", "")
-      .then((binaryData) => {
-        setcam1(binaryData);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
- 
-  
-    fetchBinaryData("/api/v1/cam3", "")
-      .then((binaryData) => {
-        setcam2(binaryData);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
+    changeVideo(cam_index, index+1)
   }
+
+  function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  };
 
   function getDoorState() {
     fetch("/api/v1/door")
