@@ -98,7 +98,7 @@ defmodule VintageNetWizard.Web.Api do
 
     case File.read("/root/cam#{result["cam_index"]}/frame#{result["format_index"]}.jpg") do
       {:ok, binary} -> send_imagen(conn, 200, binary)
-      {:error, posix} -> send_imagen(conn, 200, 0)
+      {:error, _posix} -> send_json(conn, 204, "")
     end
 
   end

@@ -76,13 +76,13 @@
 			<div class="container mx-auto">
 				<div class="grid grid-flow-row gap-4 md:grid-cols-3 md:gap-6">
 					<div class="col-span-1 test-col test-cam">
-						<img id="cam0" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="io-01.jpg" alt="cam0">
+						<img id="cam0" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="/images/noimg.jpg" alt="cam0">
 					</div>
 					<div class="col-span-1 test-col test-cam">
-						<img id="cam1" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="io-02.jpg" alt="cam1">
+						<img id="cam1" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="/images/noimg.jpg" alt="cam1">
 					</div>
 					<div class="col-span-1 test-col test-cam">
-						<img id="cam2" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="io-03.jpg" alt="cam2">  
+						<img id="cam2" class="h-full p-6 rounded-lg border-2 border-gray-500 flex flex-col relative overflow-hidden test-col-content" src="/images/noimg.jpg" alt="cam2">
 					</div>
 				</div>
 			</div>
@@ -104,16 +104,16 @@
 				<div class="col-span-1 test-col test-cam py-2 px-1">
 					<h3 class="text-gray-900 text-lg mb-6 font-medium title-font rounded-t-lg py-3">Lock</h3>
 					<div class="row">
-						<p class="text-xs font-normal text-gray-600 -mt-1 kit-firmware-v px-3"> 
+						<p class="text-xs font-normal text-gray-600 -mt-1 kit-firmware-v px-3">
 						<strong>State</strong>: <p id="lock-state"></p>
 					</div>
 					<div class="row float-right "><button id="lock-btn" class="btn btn-in2green start-button mr-5">Lock</button></div>
 				</div>
-			</div>	
+			</div>
 		</div>
-						
-							
-					
+
+
+
 			</div>
 		</div>
 	</div>
@@ -140,7 +140,7 @@
      </div>
 
      <div>
-     
+
      </div>
 
 	</div>
