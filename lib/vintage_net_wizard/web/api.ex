@@ -25,6 +25,14 @@ defmodule VintageNetWizard.Web.Api do
     send_json(conn, 200, Jason.encode!(BackendServer.get_lock()))
   end
 
+  get "/state_imbera" do
+    send_json(conn, 200, Jason.encode!(BackendServer.get_state_imbera()))
+  end
+
+  get "/lock_type" do
+    send_json(conn, 200, Jason.encode!(BackendServer.get_lock_type()))
+  end
+
   get "/configuration/status" do
     with status <- BackendServer.configuration_status(),
          {:ok, json_status} <- Jason.encode(status) do
