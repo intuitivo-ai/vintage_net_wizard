@@ -17,10 +17,11 @@ defmodule VintageNetWizard.BackendServer do
               device_info: [],
               ap_ifname: nil,
               ifname: nil,
-              hw_check: %{},
               lock: false,
               door: %{},
               status_lock: %{},
+              lock_type: %{},
+              state_imbera: %{},
               init_cam: false,
               stop_cam: false
   end
@@ -156,16 +157,20 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.call(__MODULE__, :complete)
   end
 
-  def set_hw_check(hw_check) do
-    GenServer.cast(__MODULE__, {:set_hw_check, hw_check})
-  end
-
   def set_door(door) do
     GenServer.cast(__MODULE__, {:set_door, door})
   end
 
   def set_lock(lock) do
     GenServer.cast(__MODULE__, {:set_lock, lock})
+  end
+
+  def set_lock_type(lock_type) do
+    GenServer.cast(__MODULE__, {:set_lock_type, lock_type})
+  end
+
+  def set_state_imbera(state_imbera) do
+    GenServer.cast(__MODULE__, {:set_state_imbera, state_imbera})
   end
 
   def change_lock(value) do
@@ -180,16 +185,20 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.cast(__MODULE__, {:set_stop_cam, value})
   end
 
-  def get_hwcheck() do
-    GenServer.call(__MODULE__, :get_hwcheck)
-  end
-
   def get_door() do
     GenServer.call(__MODULE__, :get_door)
   end
 
+  def get_state_imbera() do
+    GenServer.call(__MODULE__, :get_state_imbera)
+  end
+
   def get_lock() do
     GenServer.call(__MODULE__, :get_lock)
+  end
+
+  def get_lock() do
+    GenServer.call(__MODULE__, :get_lock_type)
   end
 
   def get_change_lock() do
@@ -229,16 +238,6 @@ defmodule VintageNetWizard.BackendServer do
 
   @impl GenServer
   def handle_call(
-        :get_hwcheck,
-        _from,
-          state
-      ) do
-
-    {:reply, state.hw_check, state}
-  end
-
-  @impl GenServer
-  def handle_call(
         :init_cam,
         _from,
           state
@@ -269,6 +268,16 @@ defmodule VintageNetWizard.BackendServer do
 
   @impl GenServer
   def handle_call(
+        :get_lock_type,
+        _from,
+          state
+      ) do
+
+    {:reply, state.lock_type, state}
+  end
+
+  @impl GenServer
+  def handle_call(
         :get_change_lock,
         _from,
           state
@@ -285,6 +294,16 @@ defmodule VintageNetWizard.BackendServer do
       ) do
 
     {:reply, state.door, state}
+  end
+
+  @impl GenServer
+  def handle_call(
+        :get_state_imbera,
+        _from,
+          state
+      ) do
+
+    {:reply, state.state_imbera, state}
   end
 
   @impl GenServer
@@ -468,11 +487,6 @@ defmodule VintageNetWizard.BackendServer do
   end
 
   @impl GenServer
-  def handle_cast({:set_hw_check, hw_check}, state) do
-    {:noreply, %{state | hw_check: hw_check}}
-  end
-
-  @impl GenServer
   def handle_cast({:set_door, door}, state) do
     {:noreply, %{state | door: door}}
   end
@@ -480,6 +494,16 @@ defmodule VintageNetWizard.BackendServer do
   @impl GenServer
   def handle_cast({:set_lock, lock}, state) do
     {:noreply, %{state | status_lock: lock}}
+  end
+
+  @impl GenServer
+  def handle_cast({:set_lock_type, lock_type}, state) do
+    {:noreply, %{state | lock_type: lock_type}}
+  end
+
+  @impl GenServer
+  def handle_cast({:set_state_imbera, state_imbera}, state) do
+    {:noreply, %{state | state_imbera: state_imbera}}
   end
 
   @impl GenServer
