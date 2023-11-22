@@ -137,10 +137,10 @@ defmodule VintageNetWizard.Web.Router do
     end
   end
 
-  post "/lock/new" do
+  post "/lock/change" do
 
-    new_lock = Map.get(conn.body_params, "lock_types")
-    BackendServer.save_lock(new_lock)
+    lock = Map.get(conn.body_params, "lock_select")
+    BackendServer.save_lock(lock)
 
     redirect(conn, "/")
 

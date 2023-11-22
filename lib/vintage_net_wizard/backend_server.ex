@@ -24,7 +24,7 @@ defmodule VintageNetWizard.BackendServer do
               state_imbera: %{},
               init_cam: false,
               stop_cam: false,
-              new_lock: "",
+              lock_type_select: "",
               change_lock: false
   end
 
@@ -119,8 +119,8 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.call(__MODULE__, {:save, config})
   end
 
-  def save_lock(new_lock) do
-    GenServer.cast(__MODULE__, {:save_lock, new_lock})
+  def save_lock(lock) do
+    GenServer.cast(__MODULE__, {:save_lock, lock})
   end
 
   @doc """
@@ -211,8 +211,8 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.call(__MODULE__, :get_change_lock)
   end
 
-  def get_new_lock() do
-    GenServer.call(__MODULE__, :get_new_lock)
+  def get_change_lock_type() do
+    GenServer.call(__MODULE__, :get_change_lock_type)
   end
 
   def init_cam() do
@@ -298,12 +298,12 @@ defmodule VintageNetWizard.BackendServer do
 
   @impl GenServer
   def handle_call(
-        :get_new_lock,
+        :get_change_lock_type,
         _from,
           state
       ) do
 
-    {:reply, %{"new_lock" => state.new_lock, "change_lock" => state.change_lock}, state}
+    {:reply, %{"lock_type_select" => state.lock_type_select, "change_lock" => state.change_lock}, state}
   end
 
   @impl GenServer
@@ -534,9 +534,9 @@ defmodule VintageNetWizard.BackendServer do
   @impl GenServer
   def handle_cast({:save_lock, value}, state) do
 
-    Logger.info("New lock: #{inspect(value)}")
+    Logger.info("New lock TYPE: #{inspect(value)}")
 
-    {:noreply, %{state | new_lock: value, change_lock: true}}
+    {:noreply, %{state | lock_type_select: value, change_lock: true}}
   end
 
   @impl GenServer
