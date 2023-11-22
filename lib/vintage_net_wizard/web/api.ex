@@ -13,10 +13,6 @@ defmodule VintageNetWizard.Web.Api do
   plug(:match)
   plug(:dispatch)
 
-  get "/hw_check" do
-    send_json(conn, 200, Jason.encode!(BackendServer.get_hwcheck()))
-  end
-
   get "/door" do
     send_json(conn, 200, Jason.encode!(BackendServer.get_door()))
   end
@@ -89,14 +85,14 @@ defmodule VintageNetWizard.Web.Api do
 
     BackendServer.set_init_cam(true)
 
-    send_json(conn, 200, "")
+    send_json(conn, 200, Jason.encode!(%{"state" => "ok"}))
   end
 
   get "/stop_cams" do
 
     BackendServer.set_stop_cam(true)
 
-    send_json(conn, 200, "")
+    send_json(conn, 200, Jason.encode!(%{"state" => "ok"}))
   end
 
   post "/cam" do

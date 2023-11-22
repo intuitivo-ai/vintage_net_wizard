@@ -5,14 +5,19 @@
   //const cam1 = document.querySelector("#cam1");
   //const cam2 = document.querySelector("#cam2");
   const doorState = document.querySelector("#door-state");
-  const LockState = document.querySelector("#lock-state")
+  const LockState = document.querySelector("#lock-state");
+  const LockType = document.querySelector("#lock-type")
   const LockBtn = document.querySelector("#lock-btn");
+  const StateImbera = document.querySelector("#comm-imbera");
+  const CommImbera = document.getElementById("commImbera");
   
   getDoorState();
   setInterval(getDoorState, 1000);
 
   getLockState();
   setInterval(getLockState, 1000);
+
+  getLockType();
 
   setTimeout(() => initStream(), 1000)
 
@@ -108,11 +113,36 @@
       });
   }
 
+  function getLockType() {
+    fetch("/api/v1/lock_type")
+      .then((resp) => resp.json())
+      .then((state) => {
+        LockType.textContent = state.lock_type;
+
+        if (state.lock_type === "imbera") {
+          CommImbera.style.display = "block"; // Mostrar el div
+          getCommImbera();
+          setInterval(getCommImbera, 1000);
+      } else {
+        CommImbera.style.display = "none"; // Ocultar el div
+      }
+
+      });
+  }
+
   function getLockState() {
     fetch("/api/v1/status_lock")
       .then((resp) => resp.json())
       .then((state) => {
         LockState.textContent = state.lock;
+      });
+  }
+
+  function getCommImbera() {
+    fetch("/api/v1/state_imbera")
+      .then((resp) => resp.json())
+      .then((state) => {
+        StateImbera.textContent = state.state_imbera;
       });
   }
 
