@@ -23,7 +23,9 @@ defmodule VintageNetWizard.BackendServer do
               lock_type: %{},
               state_imbera: %{},
               init_cam: false,
-              stop_cam: false
+              stop_cam: false,
+              new_lock: "",
+              change_lock: false
   end
 
   @spec child_spec(any(), any(), keyword()) :: map()
@@ -117,6 +119,10 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.call(__MODULE__, {:save, config})
   end
 
+  def save_lock(new_lock) do
+    GenServer.cast(__MODULE__, {:save_lock, new_lock})
+  end
+
   @doc """
   Get a list of the current configurations
   """
@@ -197,12 +203,16 @@ defmodule VintageNetWizard.BackendServer do
     GenServer.call(__MODULE__, :get_lock)
   end
 
-  def get_lock() do
+  def get_lock_type() do
     GenServer.call(__MODULE__, :get_lock_type)
   end
 
   def get_change_lock() do
     GenServer.call(__MODULE__, :get_change_lock)
+  end
+
+  def get_new_lock() do
+    GenServer.call(__MODULE__, :get_new_lock)
   end
 
   def init_cam() do
@@ -284,6 +294,16 @@ defmodule VintageNetWizard.BackendServer do
       ) do
 
     {:reply, state.lock, state}
+  end
+
+  @impl GenServer
+  def handle_call(
+        :get_new_lock,
+        _from,
+          state
+      ) do
+
+    {:reply, %{"new_lock" => state.new_lock, "change_lock" => state.change_lock}, state}
   end
 
   @impl GenServer
@@ -509,6 +529,14 @@ defmodule VintageNetWizard.BackendServer do
   @impl GenServer
   def handle_cast({:change_lock, value}, state) do
     {:noreply, %{state | lock: value}}
+  end
+
+  @impl GenServer
+  def handle_cast({:save_lock, value}, state) do
+
+    Logger.info("New lock: #{inspect(value)}")
+
+    {:noreply, %{state | new_lock: value, change_lock: true}}
   end
 
   @impl GenServer

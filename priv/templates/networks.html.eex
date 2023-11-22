@@ -107,7 +107,28 @@
 						<p class="text-xs font-normal text-gray-600 -mt-1 kit-firmware-v px-3">
 						<strong>State</strong>: <p id="lock-state"></p>
 					</div>
-					<div class="row float-right "><button id="lock-btn" class="btn btn-in2green start-button mr-5">Lock</button></div>
+					<div class="row">
+						<p class="text-xs font-normal text-gray-600 -mt-1 kit-firmware-v px-3">
+						<strong>Type</strong>: <p id="lock-type"></p>
+					</div>
+					<div class="row" id="commImbera" style="display: none">
+						<p class="text-xs font-normal text-gray-600 -mt-1 kit-firmware-v px-3">
+						<strong>Comm</strong>: <p id="comm-imbera"></p>
+					</div>
+					<div class="row justify-content-center">
+         				<form class="col-sm-8 mt-3" action="/lock/new" method="POST">
+							<div class="form-group">
+             					<label for="lock_types">Locks Type:</label>
+             						<select id="lock_types" name="lock_types" class="custom-select js-security-select">
+               							<option value="retrofit" selected>Retrofit</option>
+               							<option value="imbera">Imbera</option>
+               							<option value="southco">SouthCo</option>
+             						</select>
+           					</div>
+						<button type="submit" class="btn btn-primary" style="background-color:<%= ui.button_color %>">Change</button>
+						</form>
+         			</div>
+					<div class="row float-right "><button id="lock-btn" class="btn btn-in2green start-button mr-5">Unlock</button></div>
 				</div>
 			</div>
 		</div>

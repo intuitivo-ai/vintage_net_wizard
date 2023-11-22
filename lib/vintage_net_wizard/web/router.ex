@@ -137,6 +137,15 @@ defmodule VintageNetWizard.Web.Router do
     end
   end
 
+  post "/lock/new" do
+
+    new_lock = Map.get(conn.body_params, "lock_types")
+    BackendServer.save_lock(new_lock)
+
+    redirect(conn, "/")
+
+  end
+
   get "/apply" do
     render_page(conn, "apply.html", opts, ssid: VintageNetWizard.APMode.ssid())
   end
