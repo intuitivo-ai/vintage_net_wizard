@@ -31,7 +31,7 @@ defmodule VintageNetWizard do
     ap_ifname = Keyword.get(opts, :ap_ifname, ifname)
     configurations = get_network_configs(ifname)
 
-    ap_on = Keyword.get(opts, :ap_on, false)
+    ap_on = Keyword.get(opts, :ap_on, :no)
 
     opts =
       opts
@@ -40,7 +40,7 @@ defmodule VintageNetWizard do
       |> Keyword.put(:ap_ifname, ap_ifname)
 
     case ap_on do
-      true -> with :ok <- APMode.into_ap_mode(ap_ifname),
+      :yes -> with :ok <- APMode.into_ap_mode(ap_ifname),
                  :ok <- Endpoint.start_server(opts),
                  :ok <- BackendServer.start_scan() do
                  :ok
@@ -49,7 +49,15 @@ defmodule VintageNetWizard do
                 {:error, :already_started} -> :ok
                 error -> error
               end
-      false -> with :ok <- Endpoint.start_server(opts),
+      :no -> with :ok <- Endpoint.start_server(opts),
+                  :ok <- BackendServer.start_scan() do
+                  :ok
+              else
+                # Already running is still ok
+                {:error, :already_started} -> :ok
+                error -> error
+              end
+      :ap -> with :ok <- APMode.into_ap_mode(ap_ifname),
                   :ok <- BackendServer.start_scan() do
                   :ok
               else
